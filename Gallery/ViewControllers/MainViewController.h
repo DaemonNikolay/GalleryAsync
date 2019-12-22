@@ -11,6 +11,7 @@
 
 @interface MainViewController : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout> {
     UICollectionView *_collectionView;
+    UIRefreshControl *_refreshControl;
 }
 
 

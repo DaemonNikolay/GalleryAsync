@@ -23,6 +23,7 @@ static CGFloat widthOfScreen;
 static CGFloat inset = 10;
 
 NSMutableArray *imageUrls;
+NSMutableSet *imagePaths;
 
 
 // MARK: --
@@ -42,6 +43,14 @@ NSMutableArray *imageUrls;
 
     [self.view addSubview:_collectionView];
 
+
+    _refreshControl = [[UIRefreshControl alloc] init];
+    _refreshControl.tintColor = [UIColor grayColor];
+    [_refreshControl addTarget:self action:@selector(refreshControlAction) forControlEvents:UIControlEventValueChanged];
+    [_collectionView addSubview:_refreshControl];
+
+    _collectionView.alwaysBounceVertical = YES;
+
     imageUrls = [NSMutableArray new];
 
     [imageUrls addObject:@"https://avatars.mds.yandex.net/get-pdb/1774534/fa0473b1-2936-4815-b2fd-3295397e4563/s1200"];
@@ -49,7 +58,14 @@ NSMutableArray *imageUrls;
     [imageUrls addObject:@"https://www.nastol.com.ua/pic/201509/1680x1050/nastol.com.ua-150389.jpg"];
     [imageUrls addObject:@"https://wallbox.ru/wallpapers/main2/201715/149218094758f0dfd310e6b5.70800569.jpg"];
     [imageUrls addObject:@"https://images.wallpaperscraft.ru/image/devushka_lico_glaza_blondinka_zagadochnyy_11405_1920x1200.jpg"];
-    [imageUrls addObject:@"https://img4.goodfon.com/original/2048x1363/9/41/devushka-briunetka-vzgliad-pricheska-makiiazh-kurtka-mekh-ka.jpg"];
+    [imageUrls addObject:@"https://7themes.su/php/imres/resize.php?width=1152&height=864&cropratio=4:3&image=/_ph/31/255757667.jpg"];
+}
+
+- (void)refreshControlAction {
+    [self clearCacheImages];
+
+    [_collectionView reloadData];
+    [_refreshControl endRefreshing];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -103,6 +119,12 @@ NSMutableArray *imageUrls;
     }
 
     [_pngData writeToFile:_imagePath atomically:YES];
+
+    if (imagePaths == nil) {
+        imagePaths = [NSMutableSet new];
+    }
+
+    [imagePaths addObject:_imagePath];
 }
 
 - (NSString *)getCacheDirectoryPath {
@@ -122,12 +144,27 @@ NSMutableArray *imageUrls;
     return nil;
 }
 
+- (void)clearCacheImages {
+    if (imagePaths == nil) {
+        return;
+    }
+
+    for (NSString *path in imagePaths) {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if ([fileManager fileExistsAtPath:path]) {
+            [fileManager removeItemAtPath:path error:nil];
+        }
+    }
+
+    [imagePaths removeAllObjects];
+}
+
 
 // MARK: --
 // MARK: UICollectionView
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return imageUrls.count - 1;
+    return imageUrls.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -158,5 +195,21 @@ NSMutableArray *imageUrls;
     return CGSizeMake(widthOfScreen, widthOfScreen);
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:indexPath];
+
+    [UIView animateWithDuration:0.7f animations:^{
+        CGFloat pointXWithCoefficient = [self getWidthOfScreen] + inset * 2;
+        cell.frame = CGRectOffset(cell.frame, pointXWithCoefficient, 0);
+
+    }                completion:^(BOOL finished) {
+
+
+
+//        [_collectionView cellForItemAtIndexPath:indexPath];
+//        [_collectionView deleteItemsAtIndexPaths:@[indexPath]];
+//        [imageUrls removeObjectAtIndex:(NSUInteger) indexPath.item];
+    }];
+}
 
 @end
