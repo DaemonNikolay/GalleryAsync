@@ -42,7 +42,6 @@ NSMutableArray *imageUrls;
 
     [self.view addSubview:_collectionView];
 
-
     imageUrls = [NSMutableArray new];
 
     [imageUrls addObject:@"https://avatars.mds.yandex.net/get-pdb/1774534/fa0473b1-2936-4815-b2fd-3295397e4563/s1200"];
@@ -51,16 +50,6 @@ NSMutableArray *imageUrls;
     [imageUrls addObject:@"https://wallbox.ru/wallpapers/main2/201715/149218094758f0dfd310e6b5.70800569.jpg"];
     [imageUrls addObject:@"https://images.wallpaperscraft.ru/image/devushka_lico_glaza_blondinka_zagadochnyy_11405_1920x1200.jpg"];
     [imageUrls addObject:@"https://img4.goodfon.com/original/2048x1363/9/41/devushka-briunetka-vzgliad-pricheska-makiiazh-kurtka-mekh-ka.jpg"];
-
-    [imageUrls addObject:@"https://wallbox.ru/wallpapers/main/201407/63883e862ce5139.jpg"];
-    [imageUrls addObject:@"https://wallbox.ru/wallpapers/main2/201728/14996982235963942f293c18.02682269.jpg"];
-    [imageUrls addObject:@"https://cdn.fishki.net/upload/post/2017/05/23/2296943/e69cba7e5841a6f724c3c3ab6b2da9e8.jpg"];
-    [imageUrls addObject:@"https://armcasting.am/wp-content/uploads/2018/01/Girls_Smiling_beautiful_girl__photo_George_Chernyad_ev_111193_.jpg"];
-    [imageUrls addObject:@"https://pbs.twimg.com/media/BJANyPNCYAENgZI.jpg:large"];
-    [imageUrls addObject:@"https://wallbox.ru/wallpapers/main/201624/e9de2b3d7d91ce4.jpg"];
-    [imageUrls addObject:@"https://bipbap.ru/wp-content/uploads/2017/09/diana_melison_girl_model_russian_tattoos_grass_green_birthmark_66286_1280x1024-1.jpg"];
-    [imageUrls addObject:@"https://img1.badfon.ru/original/1920x1200/8/17/fon-belyy-krasivaya-volosy.jpg"];
-    [imageUrls addObject:@"https://i.artfile.me/wallpaper/13-08-2012/1920x1188/ara-ampaio-devushki-652797.jpg"];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -79,34 +68,81 @@ NSMutableArray *imageUrls;
     return CGRectGetWidth(self.view.bounds) - inset * 4;
 }
 
+- (UIImage *)getImageFromLocalCache:(NSInteger)imgItemNumber {
+    NSString *imgItem = [@(imgItemNumber) stringValue];
+    UIImage *img = [self getImageFromCacheWithName:imgItem];
+
+    if (img != nil) {
+        return img;
+    }
+
+    NSString *imgName = imageUrls[(NSUInteger) imgItemNumber];
+    NSURL *url = [NSURL URLWithString:imgName];
+
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    img = [[UIImage alloc] initWithData:data];
+
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self saveImage:img withName:imgItem];
+    });
+
+    return img;
+}
+
+
+// MARK: --
+// MARK: Local cache
+
+- (void)saveImage:(UIImage *)img withName:(NSString *)name {
+    NSData *_pngData = UIImagePNGRepresentation(img);
+
+    NSString *_imagePath = [NSString stringWithFormat:@"%@/%@.png", [self getCacheDirectoryPath], name];
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:_imagePath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:_imagePath error:nil];
+    }
+
+    [_pngData writeToFile:_imagePath atomically:YES];
+}
+
+- (NSString *)getCacheDirectoryPath {
+    NSArray *_array = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+
+    return _array[0];
+}
+
+- (UIImage *)getImageFromCacheWithName:(NSString *)name {
+    NSString *_imagePath = [NSString stringWithFormat:@"%@/%@.png", [self getCacheDirectoryPath], name];
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:_imagePath]) {
+        UIImage *_image = [UIImage imageWithContentsOfFile:_imagePath];
+        return _image;
+    }
+
+    return nil;
+}
+
 
 // MARK: --
 // MARK: UICollectionView
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return imageUrls.count;
+    return imageUrls.count - 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
 
-    cell.backgroundColor = [UIColor whiteColor];
-
-
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
 
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSString *path = imageUrls[(NSUInteger) indexPath.row];
-        NSURL *url = [NSURL URLWithString:path];
-        NSData *data = [NSData dataWithContentsOfURL:url];
-        UIImage *img = [[UIImage alloc] initWithData:data];
+        UIImage *img = [self getImageFromLocalCache:indexPath.item];
         if (img == nil) {
             return;
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{
             imgView.image = img;
-
             [cell.contentView addSubview:imgView];
         });
     });
