@@ -172,6 +172,8 @@ NSMutableSet *imagePaths;
 
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
 
+    cell.backgroundColor = [UIColor greenColor];
+
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         UIImage *img = [self getImageFromLocalCache:indexPath.item];
         if (img == nil) {
@@ -203,7 +205,6 @@ NSMutableSet *imagePaths;
         cell.frame = CGRectOffset(cell.frame, pointXWithCoefficient, 0);
 
     }                completion:^(BOOL finished) {
-
 
 
 //        [_collectionView cellForItemAtIndexPath:indexPath];
