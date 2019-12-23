@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		737B961023A7D6B000459FE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 737B960F23A7D6B000459FE6 /* Assets.xcassets */; };
 		737B961623A7D6B000459FE6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 737B961523A7D6B000459FE6 /* main.m */; };
-		73CD740B23AF226E00186826 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 73CD740A23AF226E00186826 /* Network.m */; };
 		7434F122E4EE76108A4D732B /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7434F94EE1E4B6F00F9B7FB2 /* SceneDelegate.m */; };
 		7434F5180F31C6C2FBECF250 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7434F5E28BC1C4BD87184E8D /* AppDelegate.m */; };
 		7434FBA0A9D1B9C8B7FE1C8B /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7434FB93892B023E084A18D3 /* MainViewController.m */; };
@@ -22,8 +21,6 @@
 		737B960F23A7D6B000459FE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		737B961423A7D6B000459FE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		737B961523A7D6B000459FE6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		73CD740923AF225F00186826 /* Network.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network.h; sourceTree = "<group>"; };
-		73CD740A23AF226E00186826 /* Network.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Network.m; sourceTree = "<group>"; };
 		7434F136DF89BF5FBB79A6A9 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		7434F5E28BC1C4BD87184E8D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		7434F6942425ED7DCF4DA43A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -70,7 +67,6 @@
 				7434F35665DE65CF7E02A59A /* Delegate */,
 				7434F5F638D3F6D1F1D14FC0 /* Storyboards */,
 				7434FEBBE8B14C577F5E37C8 /* ViewControllers */,
-				7434FDD3EA558D836B7C7EDC /* Services */,
 			);
 			path = Gallery;
 			sourceTree = "<group>";
@@ -93,23 +89,6 @@
 				7434F136DF89BF5FBB79A6A9 /* Main.storyboard */,
 			);
 			path = Storyboards;
-			sourceTree = "<group>";
-		};
-		7434FB6D0B0996F949DF9048 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				73CD740923AF225F00186826 /* Network.h */,
-				73CD740A23AF226E00186826 /* Network.m */,
-			);
-			path = Network;
-			sourceTree = "<group>";
-		};
-		7434FDD3EA558D836B7C7EDC /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				7434FB6D0B0996F949DF9048 /* Network */,
-			);
-			path = Services;
 			sourceTree = "<group>";
 		};
 		7434FEBBE8B14C577F5E37C8 /* ViewControllers */ = {
@@ -192,7 +171,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				737B961623A7D6B000459FE6 /* main.m in Sources */,
-				73CD740B23AF226E00186826 /* Network.m in Sources */,
 				7434F5180F31C6C2FBECF250 /* AppDelegate.m in Sources */,
 				7434FBA0A9D1B9C8B7FE1C8B /* MainViewController.m in Sources */,
 				7434F122E4EE76108A4D732B /* SceneDelegate.m in Sources */,

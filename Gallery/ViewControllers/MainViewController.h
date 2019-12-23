@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface MainViewController : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout> {
+@interface MainViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> {
     UICollectionView *_collectionView;
     UIRefreshControl *_refreshControl;
 }
